@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>3 Meses de Nós 💖</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+
+  body{
+    margin:0;
+    padding:0;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(to bottom,#ffe6f0,#fff0f5);
+    overflow-x:hidden;
+    -webkit-user-select:none; /* evita seleção ao arrastar */
+    user-select:none;
+  }
+
+  /* ==== INTRODUÇÃO ==== */
+  #intro{
+    position:fixed;
+    inset:0;
+    background: linear-gradient(135deg,#ffd6e8,#fff0f5);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    z-index:1000;
+    transition:opacity 1s ease, visibility 1s ease;
+    opacity:1;
+  }
+  #intro h1{
+    font-family:'Great Vibes',cursive;
+    font-size:38px;
+    color:#a0522d;
+    margin-bottom:20px;
+    text-shadow:1px 1px 2px rgba(0,0,0,0.2);
+  }
+  #intro p{
+    font-size:18px;
+    color:#5c4033;
+    max-width:320px;
+    line-height:1.5;
+    margin-bottom:30px;
+  }
+  #intro button{
+    background:#f5d6a0;
+    border:none;
+    padding:12px 24px;
+    border-radius:25px;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+    color:#5c4033;
+    box-shadow:0 5px 15px rgba(0,0,0,0.2);
+    transition:transform .2s;
+  }
+  #intro button:hover{ transform:scale(1.05); }
+  #intro.hidden{ opacity:0; visibility:hidden; }
+
+  /* container dos corações */
+  #hearts{ position:fixed; inset:0; z-index:0; pointer-events:none; }
+
+  /* pergaminhos */
+  .pergaminho{
+    width:320px;
+    min-height:120px;
+    background: linear-gradient(#fdf0d5,#f5e0b7);
+    border:3px solid #d4b897;
+    border-radius:15px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.3), inset 0 0 15px rgba(255,255,255,0.3);
+    margin:25px auto;
+    cursor:pointer;
+    transform-origin: top center;
+    perspective:1200px;
+    transition: box-shadow .5s ease, height 1s ease;
+    position:relative;
+    z-index:1;
+    touch-action:none; /* para arraste no mobile */
+  }
+  .pergaminho-inner{
+    width:100%; 
+    height:100%; 
+    transition: transform 1s ease, opacity 1s ease; 
+    transform-style:preserve-3d;
+    transform: translateY(0);
+    opacity:1;
+  }
+  .pergaminho.aberto{
+    min-height:400px; 
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+  .pergaminho.aberto .pergaminho-inner{
+    transform: translateY(-20px);
+    opacity:1;
+  }
+
+  .conteudo{ 
+    padding:20px; 
+    opacity:0; 
+    transform:translateY(-20px); 
+    transition:opacity 1s ease, transform 1s ease; 
+  }
+  .pergaminho.aberto .conteudo{ 
+    opacity:1; 
+    transform:translateY(0); 
+  }
+
+  h2{ 
+    margin:0; 
+    text-align:center; 
+    color:#a0522d; 
+    font-family:'Great Vibes',cursive; 
+    font-size:28px; 
+    text-shadow:1px 1px 2px rgba(0,0,0,0.2); 
+  }
+  p{ 
+    margin-top:10px; 
+    color:#5c4033; 
+    line-height:1.5; 
+    text-align:center; 
+    white-space: pre-line; 
+  }
+  .luz{ 
+    position:absolute; 
+    inset:0; 
+    pointer-events:none; 
+    background: radial-gradient(circle at 50% 0%, rgba(255,255,255,0.25), transparent 70%); 
+    border-radius:15px; 
+    opacity:0; 
+    transition:opacity 1s ease, transform 1s ease; 
+  }
+
+  /* brilho pulsante */
+  @keyframes glow {
+    0% { box-shadow: 0 15px 35px rgba(0,0,0,0.4), inset 0 0 25px rgba(255,255,255,0.4); }
+    50% { box-shadow: 0 15px 35px rgba(255,105,180,0.6), inset 0 0 35px rgba(255,182,193,0.5); }
+    100% { box-shadow: 0 15px 35px rgba(0,0,0,0.4), inset 0 0 25px rgba(255,255,255,0.4); }
+  }
+
+  /* corações */
+  .heart{
+    position:fixed;
+    transform:translateY(120vh) rotate(-45deg);
+    animation: float var(--duration,10s) linear infinite;
+    opacity:0;
+    width:var(--size,12px); height:var(--size,12px);
+    left:0;
+    pointer-events:none;
+  }
+  .heart .l,.heart .r{
+    position:absolute;
+    width:100%; height:100%;
+    border-radius:50%;
+    background:var(--color,rgba(255,0,100,0.7));
+  }
+  .heart .l{ top:calc(var(--size) * -0.5); left:0; }
+  .heart .r{ left:calc(var(--size)/2); top:0; }
+
+  @keyframes float{
+    0%{ transform: translateY(120vh) translateX(var(--dx-start,0)) scale(var(--scale,1)) rotate(-45deg); opacity:0;}
+    20%{ opacity:var(--opacity,0.7);}
+    50%{ transform: translateY(50vh) translateX(var(--dx-mid,15px)) scale(calc(var(--scale)*1.05)) rotate(-30deg); opacity:var(--opacity,0.7);}
+    100%{ transform: translateY(-20vh) translateX(var(--dx-end,-15px)) scale(var(--scale,1)) rotate(-60deg); opacity:0;}
+  }
+</style>
+</head>
+<body>
+
+<div id="intro">
+  <h1>💌 3 Meses de Amor</h1>
+  <p>Hoje completamos 3 meses de uma linda história que só está começando.  
+  Cada momento ao seu lado é um presente, e agora prepare-se para abrir os pergaminhos do nosso coração. 💖</p>
+  <button onclick="iniciar()">Entrar no nosso mundo 💕</button>
+</div>
+
+<div id="hearts"></div>
+
+<audio id="musica" src="minha_musica.mp3" loop></audio>
+
+<audio id="som1" src="https://www.soundjay.com/mechanical/sounds/paper-flip-01.mp3"></audio>
+<audio id="som2" src="https://www.soundjay.com/mechanical/sounds/paper-flip-02.mp3"></audio>
+<audio id="som3" src="https://www.soundjay.com/mechanical/sounds/paper-flip-03.mp3"></audio>
+<audio id="som4" src="https://www.soundjay.com/mechanical/sounds/paper-flip-04.mp3"></audio>
+<audio id="som5" src="https://www.soundjay.com/mechanical/sounds/paper-flip-01.mp3"></audio>
+
+<!-- pergaminhos -->
+<div class="pergaminho" onclick="togglePergaminho(this,0)">
+  <div class="pergaminho-inner"><div class="luz"></div>
+    <h2>💌 Meu Amor Inicial</h2>
+    <div class="conteudo"><p>Desde o momento em que eu te reencontrei, meu coração encontrou um lar em você. Cada sorriso seu ilumina meus dias e me faz acreditar no amor verdadeiro. Quero que saiba que cada instante ao seu lado é precioso e insubstituível.</p></div>
+  </div>
+</div>
+
+<div class="pergaminho" onclick="togglePergaminho(this,1)">
+  <div class="pergaminho-inner"><div class="luz"></div>
+    <h2>🌸 Minha Gratidão</h2>
+    <div class="conteudo"><p>Obrigado por ser quem você é: carinhosa, incrível e única. Com você, aprendi que o amor é paciente, divertido e cheio de pequenas alegrias. Eu te amo por cada detalhe seu, visível ou escondido, e cada gesto seu me conquista mais.</p></div>
+  </div>
+</div>
+
+<div class="pergaminho" onclick="togglePergaminho(this,2)">
+  <div class="pergaminho-inner"><div class="luz"></div>
+    <h2>💍 Meu Compromisso</h2>
+    <div class="conteudo"><p>Prometo te apoiar, respeitar e cuidar de você, nos dias fáceis e nos difíceis. Quero construir memórias ao seu lado, rir com você, sonhar com você e viver todas as aventuras que a vida nos oferecer. Meu amor por você cresce a cada dia, sem limites e sem fim.</p></div>
+  </div>
+</div>
+
+<div class="pergaminho" onclick="togglePergaminho(this,3)">
+  <div class="pergaminho-inner"><div class="luz"></div>
+    <h2>💖 Minha Promessa Final</h2>
+    <div class="conteudo"><p>Quero que este pergaminho seja apenas um lembrete do quanto te amo profundamente. Você é meu porto seguro, minha alegria e meu encanto diário. Seu amor me transforma e me completa. Hoje e sempre, eu escolho você! 💕</p></div>
+  </div>
+</div>
+
+<div class="pergaminho" onclick="togglePergaminho(this,4)">
+  <div class="pergaminho-inner"><div class="luz"></div>
+    <h2>✨ Meu Amor Verdadeiro</h2>
+    <div class="conteudo"><p>EU TE AMO MUITO MEU AMOR!!! ❤❤❤<br>EU VOU TE AMAR PARA SEMPRE!!!</p></div>
+  </div>
+</div>
+
+<script>
+const musica=document.getElementById('musica');
+const sons=[som1,som2,som3,som4,som5];
+musica.volume=0.28; sons.forEach(s=>s.volume=0.5);
+
+function togglePergaminho(el,i){
+  const aberto=el.classList.contains('aberto');
+  if(!aberto){
+    el.classList.add('aberto');
+    el.querySelector('.luz').style.opacity=1;
+    musica.play();
+    sons[i].currentTime=0; sons[i].play();
+  }else{
+    el.classList.remove('aberto');
+    el.querySelector('.luz').style.opacity=0;
+  }
+}
+
+/* corações */
+const colors=['rgba(255,0,100,0.8)','rgba(255,105,180,0.8)','rgba(200,0,150,0.85)'];
+const container=document.getElementById('hearts');
+for(let i=0;i<40;i++){
+  const heart=document.createElement('div'); heart.className='heart';
+  const size=Math.round(6+Math.random()*22);
+  heart.style.setProperty('--size',size+'px');
+  heart.style.setProperty('--scale',(0.6+size/28).toFixed(2));
+  heart.style.setProperty('--duration',(5+Math.random()*10).toFixed(2)+'s');
+  heart.style.setProperty('--opacity',(0.25+Math.random()*0.7).toFixed(2));
+  const color=colors[Math.floor(Math.random()*colors.length)];
+  heart.style.setProperty('--color',color);
+  heart.style.left=Math.random()*100+'vw';
+  heart.style.setProperty('--dx-start',(Math.random()*100-50)+'px');
+  heart.style.setProperty('--dx-mid',(Math.random()*60-30)+'px');
+  heart.style.setProperty('--dx-end',(Math.random()*100-50)+'px');
+  const l=document.createElement('div'); l.className='l'; l.style.background=color;
+  const r=document.createElement('div'); r.className='r'; r.style.background=color;
+  heart.appendChild(l); heart.appendChild(r);
+  container.appendChild(heart);
+}
+
+/* intro */
+function iniciar(){
+  document.getElementById('intro').classList.add('hidden');
+  musica.play();
+}
+
+/* Suporte a toque/arraste nos pergaminhos */
+document.querySelectorAll('.pergaminho').forEach(pergaminho => {
+  let startY=0, isDragging=false;
+  pergaminho.addEventListener('touchstart', e => {
+    startY = e.touches[0].clientY;
+    isDragging = true;
+  });
+  pergaminho.addEventListener('touchmove', e => {
+    if(!isDragging) return;
+    const currentY = e.touches[0].clientY;
+    const deltaY = currentY - startY;
+    pergaminho.style.transform = `translateY(${deltaY}px)`;
+  });
+  pergaminho.addEventListener('touchend', e => {
+    isDragging = false;
+    pergaminho.style.transform = 'translateY(0)';
+  });
+});
+</script>
+</body>
+</html>
